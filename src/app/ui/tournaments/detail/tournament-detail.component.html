@@ -1,0 +1,11 @@
+<div class="page-panel tournament-detail-page">
+
+  <h2>{{tournament.name}}</h2>
+
+  <div *ngIf="tournament.dateStart">{{tournament.dateStart.toDate() | date:'dd-MMM-yyyy'}}</div>
+  <div *ngIf="tournament.dateEnd">{{tournament.dateEnd.toDate() | date:'dd-MMM-yyyy'}}</div>
+
+  <p class="lead" *ngIf="tournament.description">{{tournament.description}}</p>
+
+</div>
+

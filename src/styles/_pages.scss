@@ -1,0 +1,36 @@
+$component-spacing-default: 10px;
+$gray-400: #ededed;
+
+// HTML
+
+// force vertical scrollbar to prevent screen resizing
+html {
+  overflow-y: scroll;
+}
+
+// PAGE CONTAINER
+// --------------------------------------------------
+
+.page-container {
+  padding: $component-spacing-default;
+  padding-top: 5px;
+}
+
+// PAGE PANEL
+// --------------------------------------------------
+
+.page-panel {
+  padding: $component-spacing-default;
+  border: 1px solid $gray-400;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.page-panel-title {
+  font-size: 21px;
+}
+
+
+.page-panel ~ .page-panel {
+  margin-top: 10px;
+}

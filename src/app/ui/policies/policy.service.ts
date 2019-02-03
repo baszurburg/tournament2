@@ -23,7 +23,12 @@ export class PolicyService {
   }
 
   deletePolicy(policyId: string){
-    this.firestore.doc('policies/' + policyId).delete();
+    this.firestore.doc('policies/' + policyId).delete().then(function() {
+      console.log('Policy deleted with id: ', policyId);
+    }).catch(function(error) {
+      console.error('Error removing policy: ', error);
+    });
+
   }
 
 }

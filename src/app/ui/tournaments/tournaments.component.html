@@ -1,0 +1,87 @@
+<div class="page-panel">
+  <h2>Tournaments</h2>
+  <br>
+
+  <table class="table table-sm">
+    <thead>
+    <th>Name</th>
+    <th>Start</th>
+    <th>End</th>
+    <th>Code</th>
+    <th>Id</th>
+    <th colspan="2">Actions</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let tournament of tournaments">
+
+      <td><a routerLink="/tournaments/{{tournament.code}}" (click)="onSelectTournament(tournament)">{{tournament.name}}</a></td>
+      <td><span *ngIf="tournament.dateStart">{{tournament.dateStart['seconds'] * 1000 | date:'dd-MM-yyyy'}}</span></td>
+      <td><span *ngIf="tournament.dateEnd">{{tournament.dateEnd['seconds'] * 1000 | date:'dd-MM-yyyy'}}</span></td>
+      <td>{{tournament.code}}</td>
+      <td>{{tournament.id}}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary" (click)="openUpdateTournamentModal(tournamentModal, tournament)">Edit</button>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-danger" (click)="deleteTournament(tournament.id)">Del</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-sm btn-outline-primary" (click)="openCreateTournamentModal(tournamentModal)">New</button>
+</div>
+
+
+<ng-template #tournamentModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{modalTitle}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="tournamentForm" (ngSubmit)="onSubmitTournament()" autocomplete="off">
+
+      <input type="hidden" formControlName="id">
+
+      <div class="form-group">
+        <label for="tournament-name">Tournament name</label>
+        <input type="text" class="form-control" id="tournament-name" formControlName="name">
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="tournament-start">Tournament start date</label>
+            <input type="text" class="form-control" id="tournament-start" formControlName="dateStart"
+                   #dpYMD="bsDatepicker"
+                   bsDatepicker
+                   [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }">
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="tournament-end">Tournament end date</label>
+            <input type="text" class="form-control" id="tournament-end" formControlName="dateEnd"
+                   #dpYMD="bsDatepicker"
+                   bsDatepicker
+                   [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tournament-code">Tournament code</label>
+        <input type="text" class="form-control" id="tournament-code" formControlName="code" aria-describedby="codeHelp">
+        <small id="codeHelp" class="form-text text-muted">Add here a mask (lowercase max 10 chars)</small>
+      </div>
+      <div class="form-group">
+        <label for="tournament-description">Description</label>
+        <textarea class="form-control" id="tournament-description" rows="3" formControlName="description"></textarea>
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary" (click)="modalRef.hide()">Cancel</button>
+      <button *ngIf="formModus==='CREATE'" type="submit" class="btn btn-outline-primary" [disabled]="tournamentForm.invalid">Create tournament</button>
+      <button *ngIf="formModus==='UPDATE'" type="submit" class="btn btn-outline-primary" [disabled]="tournamentForm.invalid">Update tournament</button>
+    </form>
+  </div>
+</ng-template>

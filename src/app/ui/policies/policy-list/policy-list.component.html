@@ -1,0 +1,55 @@
+<div class="page-panel">
+
+  <h2>Policies</h2>
+
+  <table class="table table-sm">
+    <thead>
+    <th>Id</th>
+    <th>Number</th>
+    <th>Created At</th>
+    <th>Expire At</th>
+    <th>Amount</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let policy of policies">
+
+      <td>{{policy.id}}</td>
+      <td>{{policy.policyNumber}}</td>
+      <td>{{policy.creationDate}}</td>
+      <td>{{policy.expireDate}}</td>
+      <td>{{policy.policyAmount}}</td>
+      <td>
+        <button class="btn btn-sm btn-danger" (click)="delete(policy.id)">Del</button>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary" (click)="create(policy)">Create</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div class="page-panel">
+  <button type="button" class="btn btn-primary" (click)="openModal(demoModel)">Create template modal</button>
+
+  <ng-template #demoModel>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Modal</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      This is a modal.
+    </div>
+  </ng-template>
+</div>
+
+
+<div class="page-panel">
+  <pre>
+    {{ policies | json }}
+  </pre>
+</div>

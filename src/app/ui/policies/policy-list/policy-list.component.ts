@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { PolicyService } from '../policy.service';
 import { Policy } from '../policy.model';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'tnm-policy-list',
@@ -9,8 +10,13 @@ import { Policy } from '../policy.model';
 })
 export class PolicyListComponent implements OnInit {
 
+  modalRef: BsModalRef;
   policies: Policy[];
-  constructor(private policyService: PolicyService) { }
+
+  constructor(
+    private policyService: PolicyService,
+    private modalService: BsModalService
+  ) { }
 
   ngOnInit() {
     this.policyService.getPolicies().subscribe(data => {
@@ -23,7 +29,18 @@ export class PolicyListComponent implements OnInit {
     });
   }
 
-  create(policy: Policy){
+  // Modal
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+
+  // Policy CRUD
+
+  create(policy: Policy) {
+    delete policy.id;
+    policy.policyAmount = policy.policyAmount + 25;
     this.policyService.createPolicy(policy);
   }
 
