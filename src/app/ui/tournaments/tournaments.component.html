@@ -14,27 +14,28 @@
     <tbody>
     <tr *ngFor="let tournament of tournaments">
 
-      <td><a routerLink="/tournaments/{{tournament.code}}" (click)="onSelectTournament(tournament)">{{tournament.name}}</a></td>
-      <td><span *ngIf="tournament.dateStart">{{tournament.dateStart['seconds'] * 1000 | date:'dd-MM-yyyy'}}</span></td>
-      <td><span *ngIf="tournament.dateEnd">{{tournament.dateEnd['seconds'] * 1000 | date:'dd-MM-yyyy'}}</span></td>
-      <td>{{tournament.code}}</td>
-      <td>{{tournament.id}}</td>
+      <td><a routerLink="/tournaments/{{tournament.code}}" (click)="onSelectTournament(tournament)">{{ tournament.name }}</a></td>
+      <td><span *ngIf="tournament.dateStart">{{ tournament.dateStart['seconds'] * 1000 | date:'dd-MM-yyyy' }}</span></td>
+      <td><span *ngIf="tournament.dateEnd">{{ tournament.dateEnd['seconds'] * 1000 | date:'dd-MM-yyyy' }}</span></td>
+      <td>{{ tournament.code }}</td>
+      <td>{{ tournament.id }}</td>
       <td>
         <button class="btn btn-sm btn-outline-primary" (click)="openUpdateTournamentModal(tournamentModal, tournament)">Edit</button>
       </td>
       <td>
-        <button class="btn btn-sm btn-danger" (click)="deleteTournament(tournament.id)">Del</button>
+        <button class="btn btn-sm btn-danger" (click)="openConfirm(confirmModal, tournament)">Del</button>
       </td>
     </tr>
     </tbody>
   </table>
-  <button class="btn btn-sm btn-outline-primary" (click)="openCreateTournamentModal(tournamentModal)">New</button>
+  <button class="btn btn-sm btn-outline-primary" (click)="openCreateTournamentModal(tournamentModal)">Create new tournament</button>
 </div>
 
+<!-- Templates -->
 
 <ng-template #tournamentModal>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">{{modalTitle}}</h4>
+    <h4 class="modal-title pull-left">{{ modalTitle }}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -83,5 +84,13 @@
       <button *ngIf="formModus==='CREATE'" type="submit" class="btn btn-outline-primary" [disabled]="tournamentForm.invalid">Create tournament</button>
       <button *ngIf="formModus==='UPDATE'" type="submit" class="btn btn-outline-primary" [disabled]="tournamentForm.invalid">Update tournament</button>
     </form>
+  </div>
+</ng-template>
+
+<ng-template #confirmModal>
+  <div class="modal-body text-center">
+    <p>Delete this tournament?</p>
+    <button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="decline()" >Cancel</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="confirm()" >Delete</button>
   </div>
 </ng-template>

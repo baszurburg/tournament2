@@ -1,4 +1,4 @@
-$component-spacing-default: 10px;
+$component-spacing-default: 15px;
 $gray-400: #ededed;
 
 // HTML
@@ -12,8 +12,7 @@ html {
 // --------------------------------------------------
 
 .page-container {
-  padding: $component-spacing-default;
-  padding-top: 5px;
+  padding: 5px 30px;
 }
 
 // PAGE PANEL
@@ -32,5 +31,5 @@ html {
 
 
 .page-panel ~ .page-panel {
-  margin-top: 10px;
+  margin-top: 15px;
 }

@@ -19,9 +19,11 @@ export class TournamentsComponent implements OnInit {
   public modalRef: BsModalRef;
 
   public modalTitle: string;
-  public formModus: 'CREATE'|'UPDATE';
+  public formModus: 'CREATE' | 'UPDATE';
 
-  constructor(
+  private tournamentToBeDeleted: Tournament;
+
+  public constructor(
     private dataService: DataService,
     private store: Store,
     private modalService: BsModalService,
@@ -30,10 +32,10 @@ export class TournamentsComponent implements OnInit {
     this.createTournamentForm();
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.store.dispatch(new tournamentActions.StartLoading());
-    this.dataService.getTournaments().subscribe(data => {
-      this.tournaments = data.map(e => {
+    this.dataService.getTournaments().subscribe((data) => {
+      this.tournaments = data.map((e) => {
         return {
           id: e.payload.doc.id,
           ...e.payload.doc.data()
@@ -59,13 +61,21 @@ export class TournamentsComponent implements OnInit {
       dateEnd: ['', Validators.required]
     });
   }
-  openCreateTournamentModal(tournamentModal: TemplateRef<any>) {
+
+  public openCreateTournamentModal(tournamentModal: TemplateRef<any>): void {
     this.modalTitle = 'Create a new tournament';
     this.formModus = 'CREATE';
+
+    this.tournamentForm.controls['code'].setValue('');
+    this.tournamentForm.controls['name'].setValue('');
+    this.tournamentForm.controls['dateStart'].setValue('');
+    this.tournamentForm.controls['dateEnd'].setValue('');
+    this.tournamentForm.controls['description'].setValue('');
+
     this.modalRef = this.modalService.show(tournamentModal);
   }
 
-  openUpdateTournamentModal(tournamentModal: TemplateRef<any>, tournament?: Tournament) {
+  public openUpdateTournamentModal(tournamentModal: TemplateRef<any>, tournament?: Tournament): void {
     this.modalTitle = 'Update tournament';
     this.formModus = 'UPDATE';
 
@@ -79,18 +89,27 @@ export class TournamentsComponent implements OnInit {
     this.modalRef = this.modalService.show(tournamentModal);
   }
 
+  public openConfirm(confirmModal: TemplateRef<any>, tournament: Tournament): void {
+    this.tournamentToBeDeleted = tournament;
+    this.modalRef = this.modalService.show(confirmModal, {class: 'modal-sm'});
+  }
+
   // Tournament CRUD
 
   public createTournament(tournament: Tournament): void {
-    this.dataService.createTournament(tournament);
+    this.dataService.createTournament(tournament).then(() => {
+      console.log('Tournament created');
+    }).catch((error) => {
+      console.warn('Error creating tournament: ', error);
+    });
   }
 
   public updateTournament(tournament: Tournament): void {
     this.dataService.updateTournament(tournament);
   }
 
-  public deleteTournament(id: string): void {
-    this.dataService.deleteTournament(id);
+  public deleteTournament(tournament: Tournament): void {
+    this.dataService.deleteTournament(tournament);
   }
 
   // PageEvents
@@ -107,8 +126,17 @@ export class TournamentsComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  public onSelectTournament(tournament: Tournament) {
+  public onSelectTournament(tournament: Tournament): void {
     this.store.dispatch(new tournamentActions.SelectTournament(tournament.code));
+  }
+
+  public confirm(): void {
+    this.deleteTournament(this.tournamentToBeDeleted);
+    this.modalRef.hide();
+  }
+
+  public decline(): void {
+    this.modalRef.hide();
   }
 
 }

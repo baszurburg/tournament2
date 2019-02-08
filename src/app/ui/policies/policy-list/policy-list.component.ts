@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { PolicyService } from '../policy.service';
 import { Policy } from '../policy.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Store } from '@ngxs/store';
+import * as tournamentActions from '../../../../shared/state/tournament.actions';
 
 @Component({
   selector: 'tnm-policy-list',
@@ -15,10 +17,12 @@ export class PolicyListComponent implements OnInit {
 
   constructor(
     private policyService: PolicyService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private store: Store
   ) { }
 
   ngOnInit() {
+    this.store.dispatch(new tournamentActions.StartLoading());
     this.policyService.getPolicies().subscribe(data => {
       this.policies = data.map(e => {
         return {
@@ -26,6 +30,7 @@ export class PolicyListComponent implements OnInit {
           ...e.payload.doc.data()
         } as Policy;
       });
+      this.store.dispatch(new tournamentActions.StopLoading());
     });
   }
 

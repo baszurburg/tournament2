@@ -1,0 +1,80 @@
+<div class="page-panel">
+  <h3 *ngIf="categories">Categories</h3>
+  <button class="btn btn-sm btn-outline-primary" (click)="openCreateCategoryModal(categoryModal)">Create new category</button>
+</div>
+
+<div class="page-panel" *ngFor="let category of categories">
+  <div class="d-flex justify-content-between">
+    <h4>{{ category.name}}</h4>
+    <div *ngIf="category.startDate">{{ category.startDate['seconds'] * 1000 | date:'dd MMMM yyyy' }}</div>
+  </div>
+  <p>{{ category.description}}</p>
+
+  <div class="d-flex justify-content-between">
+    <a routerLink="{{ category.code }}" (click)="onSelectcategory(category)">Add and edit poules</a>
+    <div>
+      <button class="btn btn-sm btn-outline-success mr-2" (click)="openUpdateCategoryModal(categoryModal, category)">Edit Category</button>
+      <button class="btn btn-sm btn-outline-danger" (click)="openConfirm(confirmModal, category.id)">Delete category</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Templates -->
+
+<ng-template #categoryModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ modalTitle }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmitCategory()" autocomplete="off">
+
+      <input type="hidden" formControlName="id">
+      <div class="form-group">
+        <label for="category-name">Category name</label>
+        <input type="text" class="form-control" id="category-name" formControlName="name">
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="category-start">Category start date</label>
+            <input type="text" class="form-control" id="category-start" formControlName="startDate"
+                   #dpYMD="bsDatepicker"
+                   bsDatepicker
+                   [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="category-code">Category code</label>
+        <input type="text" class="form-control" id="category-code" formControlName="code" aria-describedby="codeHelp">
+        <small id="codeHelp" class="form-text text-muted">Add here a mask (lowercase max 10 chars)</small>
+      </div>
+      <div class="form-group">
+        <label for="category-description">Description</label>
+        <textarea class="form-control" id="category-description" rows="3" formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="category-sort-order">Sort order</label>
+        <input type="text" class="form-control" id="category-sort-order" formControlName="sortOrder" aria-describedby="codeHelpOrder">
+        <small id="codeHelpOrder" class="form-text text-muted">Lower numbers are displayed first</small>
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary mr-2" (click)="modalRef.hide()">Cancel</button>
+      <button *ngIf="formModus==='CREATE'" type="submit" class="btn btn-outline-primary" [disabled]="categoryForm.invalid">Create category</button>
+      <button *ngIf="formModus==='UPDATE'" type="submit" class="btn btn-outline-primary" [disabled]="categoryForm.invalid">Update category</button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #confirmModal>
+  <div class="modal-body text-center">
+    <p>Delete this category?</p>
+    <button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="decline()" >Cancel</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="confirm()" >Delete</button>
+  </div>
+</ng-template>

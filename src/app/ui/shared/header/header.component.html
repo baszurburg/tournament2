@@ -1,0 +1,36 @@
+<div class="top-header">
+
+  <div class="top-header-left">
+    <div class="btn-group" dropdown>
+      <button id="button-links" class="btn btn-unstyled btn-apps" dropdownToggle  aria-controls="external-links" >
+        <span class="oi oi-grid-three-up" title="links" aria-hidden="true"></span>
+      </button>
+      <ul id="external-links" *dropdownMenu class="dropdown-menu"
+          role="menu" aria-labelledby="button-links">
+        <li role="menuitem"><a class="dropdown-item" href="https://www.rch-voetbal.nl/wedstrijden-programma-standen-uitslagen/programma" target="_blank">Programma RCH</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="https://www.knvb.nl/competities/eredivisie/programma" target="_blank">KNVB Eredivisie</a></li>
+        <li role="menuitem"><a class="dropdown-item" href="https://www.uefa.com/uefachampionsleague/index.html" target="_blank">UEFA Champions League</a></li>
+      </ul>
+    </div>
+
+    <div class="top-header-logo" routerLinkActiveOptions="{exact: true}">
+      <a routerLink="">
+        (logo img)
+      </a>
+    </div>
+  </div>
+
+  <div class="top-header-right">
+    <div class="mr-3 d-inline">
+      <span class="oi oi-lock-unlocked" *ngIf="!isLoading && !inEditMode"></span>
+      <span class="oi oi-lock-locked" *ngIf="isLoading || inEditMode" [ngClass]="{'text-warning' : isLoading, 'text-danger' : inEditMode}"></span>
+    </div>
+     <button class="btn btn-unstyled mr-2" routerLinkActive="active" [routerLink]="'/account'">
+      <span class="oi oi-person" title="account" aria-hidden="true"></span>
+    </button>
+    <button class="btn btn-unstyled" routerLinkActive="active" [routerLink]="'/settings'">
+      <span class="oi oi-cog" title="settings" aria-hidden="true"></span>
+    </button>
+  </div>
+
+</div>

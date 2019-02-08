@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { TournamentsState } from '../../../../shared/state/tournament.state';
 import { Observable, Subscription } from 'rxjs';
@@ -10,24 +10,21 @@ import { Router } from '@angular/router';
   templateUrl: './tournament-detail.component.html',
   styleUrls: ['./tournament-detail.component.scss']
 })
-export class TournamentDetailComponent implements OnInit, OnDestroy {
+export class TournamentDetailComponent implements OnDestroy {
 
   @Select(TournamentsState.getSelectedTournament) private selectedTournament: Observable<Tournament>;
 
   public tournament: Tournament;
   private stateSubscriptions: Array<Subscription> = [];
 
-  constructor(private router: Router) {
+  public constructor(private router: Router) {
     const stateEditSubscription = this.selectedTournament.subscribe( (value) => this.tournament = value);
     if (!this.tournament) {
       this.router.navigate(['/tournaments']);
     }
   }
 
-  public ngOnInit() {
-  }
-
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.stateSubscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 

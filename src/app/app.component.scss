@@ -1,0 +1,27 @@
+$aside-columns-width: 44px;
+$header-height: 58px;
+
+.left-column,
+.right-column {
+  flex: 0 0 $aside-columns-width;
+  min-height: calc(100vh - #{$header-height});
+}
+
+.left-column {
+  background-color: #27343d;
+}
+
+.right-column {
+  background-color: #fcfcfc;
+}
+
+.center-column {
+  flex: 1;
+  overflow: hidden;
+  background-color: #f7f7f7;
+}
+
+#main {
+  display: flex;
+  min-height: calc(100vh - #{$header-height});
+}

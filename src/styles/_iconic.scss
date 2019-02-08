@@ -1,7 +1,10 @@
 /* Bootstrap */
 
 /* Override Bootstrap default variable */
-$icon-font-path: '../fonts/' !default;
+
+/* EXAMPLES: https://useiconic.com/open/ */
+
+$icon-font-path: 'assets/fonts/iconic/' !default;
 
 @font-face {
   font-family: 'Icons';
