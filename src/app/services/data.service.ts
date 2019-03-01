@@ -3,6 +3,7 @@ import { AngularFirestore, DocumentChangeAction, DocumentReference, QueryDocumen
 import { Observable } from 'rxjs';
 import { Category } from '../models/category.interface';
 import { Tournament } from '../models/tournament.interface';
+import { Poule } from '../models/poule.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,12 @@ export class DataService {
 
   public getTournaments(): Observable<Array<DocumentChangeAction<any>>> {
     return this.firestore.collection('tournaments').snapshotChanges();
+  }
+
+  public getTournament(tournamentCode: string): Observable<Array<DocumentChangeAction<any>>> {
+    return this.firestore.collection('tournaments', (tournament) => tournament
+      .where('code', '==', tournamentCode))
+      .snapshotChanges();
   }
 
   public createTournament(tournament: Tournament): Promise<DocumentReference> {
@@ -45,6 +52,13 @@ export class DataService {
       .snapshotChanges();
   }
 
+  public getCategory(tournamentCode: string, categoryCode: string): Observable<Array<DocumentChangeAction<any>>> {
+    return this.firestore.collection('categories', (category) => category
+      .where('tournamentCode', '==', tournamentCode)
+      .where('code', '==', categoryCode))
+      .snapshotChanges();
+  }
+
   public createCategory(category: Category): Promise<DocumentReference> {
     return this.firestore.collection('categories').add(category);
   }
@@ -53,21 +67,72 @@ export class DataService {
     this.firestore.doc(`categories/${category.id}`).update(category);
   }
 
-  public deleteCategory(categoryId: string): void {
+  public deleteCategory(categoryId: string, tournamentCode?: string): void {
     this.firestore.doc(`categories/${categoryId}`).delete().then(() => {
       console.log('Category deleted with id: ', categoryId);
     }).catch((error) => {
       console.error('Error removing category: ', error);
     });
   }
-
   public deleteAllCategories(tournamentCode: string): void {
     this.firestore.collection('categories', (category) => category
       .where('tournamentCode', '==', tournamentCode))
       .get().subscribe((data) => {
         data.forEach((doc: QueryDocumentSnapshot<any>) => {
-          this.deleteCategory(doc.id);
+          this.deleteCategory(doc.id, tournamentCode);
         });
       });
   }
+
+// POULES
+// ==================================================
+
+  public getTournamentPoules(tournamentCode: string): Observable<Array<DocumentChangeAction<any>>> {
+    return this.firestore.collection('poules', (poule) => poule
+      .where('tournamentCode', '==', tournamentCode))
+      .snapshotChanges();
+  }
+
+  public getPoules(tournamentCode: string, categoryCode: string): Observable<Array<DocumentChangeAction<any>>> {
+    return this.firestore.collection('poules', (poule) => poule
+      .where('tournamentCode', '==', tournamentCode)
+      .where('categoryCode', '==', categoryCode))
+      .snapshotChanges();
+  }
+
+  public getPoule(tournamentCode: string, categoryCode: string, pouleCode: string): Observable<Array<DocumentChangeAction<any>>> {
+    return this.firestore.collection('poules', (poule) => poule
+      .where('tournamentCode', '==', tournamentCode)
+      .where('categoryCode', '==', categoryCode)
+      .where('code', '==', pouleCode))
+      .snapshotChanges();
+  }
+
+  public createPoule(poule: Poule): Promise<DocumentReference> {
+    return this.firestore.collection('poules').add(poule);
+  }
+
+  public updatePoule(poule: Poule): void {
+    this.firestore.doc(`poules/${poule.id}`).update(poule);
+  }
+
+  public deletePoule(pouleId: string): void {
+    this.firestore.doc(`poules/${pouleId}`).delete().then(() => {
+      console.log('Poule deleted with id: ', pouleId);
+    }).catch((error) => {
+      console.error('Error removing poule: ', error);
+    });
+  }
+
+  public deleteAllPoules(tournamentCode: string, categoryCode: string): void {
+    this.firestore.collection('poules', (poule) => poule
+      .where('tournamentCode', '==', tournamentCode)
+      .where('categoryCode', '==', categoryCode))
+      .get().subscribe((data) => {
+      data.forEach((doc: QueryDocumentSnapshot<any>) => {
+        this.deletePoule(doc.id);
+      });
+    });
+  }
+
 }

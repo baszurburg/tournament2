@@ -1,5 +1,6 @@
 import { Tournament } from '../../app/models/tournament.interface';
 import { Category } from '../../app/models/category.interface';
+import { Poule } from '../../app/models/poule.interface';
 
 // GLOBAL ACTIONS
 // ==================================================
@@ -36,7 +37,7 @@ export class StoreTournaments {
 // selected Tournament
 export class SelectTournament {
   public static readonly type = '[Tournaments] Select Tournament';
-  public constructor(public readonly payload: string) {}
+  public constructor(public readonly payload: Tournament) {}
 }
 
 // CATEGORY ACTIONS
@@ -54,6 +55,27 @@ export class SelectCategory {
   public constructor(public readonly payload: Category) {}
 }
 
+// POULE ACTIONS
+// ==================================================
+
+// store Poules
+export class StorePoules {
+  public static readonly type = '[Poules] Store Poules';
+  public constructor(public readonly payload: Array<Poule>) {}
+}
+
+// store All Tournament Poules
+export class StoreTournamentPoules {
+  public static readonly type = '[Poules] Store Tournament Poules';
+  public constructor(public readonly payload: Array<Poule>) {}
+}
+
+// selected Poule
+export class SelectPoule {
+  public static readonly type = '[Poules] Select Poule';
+  public constructor(public readonly payload: Poule) {}
+}
+
 export type TournamentActions =
   | StartEditing
   | StopEditing
@@ -62,4 +84,7 @@ export type TournamentActions =
   | StoreTournaments
   | SelectTournament
   | StoreCategories
-  | SelectCategory;
+  | SelectCategory
+  | StoreTournamentPoules
+  | StorePoules
+  | SelectPoule;

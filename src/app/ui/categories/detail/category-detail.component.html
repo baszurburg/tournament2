@@ -1,3 +1,76 @@
-<p>
-  category-detail works!
-</p>
+<div class="category-detail-page">
+  <div *ngIf="tournament && category">
+    <div class="page-panel">
+      <h2>{{ tournament.name }} - {{ category.name }}</h2>
+      <p *ngIf="category.description" class="lead">{{ category.description }}</p>
+      <button class="btn btn-sm btn-outline-primary" (click)="openCreatePouleModal(pouleModal)">Create new poule</button>
+    </div>
+
+    <div *ngFor="let poule of poules | orderBy : 'name'" class="page-panel">
+      <h4 [ngStyle]="{'color': poule.color}">{{ poule.name }}</h4>
+      <p *ngIf="poule.matchDuration" >Match duration: {{ poule.matchDuration }}</p>
+
+      <div>
+        <button class="btn btn-sm btn-outline-success mr-2" (click)="openUpdatePouleModal(pouleModal, poule)">Edit Poule details</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="openConfirm(confirmModal, poule.id)">Delete poule</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- Templates -->
+
+<ng-template #pouleModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ modalTitle }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form [formGroup]="pouleForm" (ngSubmit)="onSubmitPoule()" autocomplete="off">
+
+      <input type="hidden" formControlName="id">
+      <div class="form-group">
+        <label for="poule-name">Poule name</label>
+        <input type="text" class="form-control" id="poule-name" formControlName="name">
+      </div>
+      <div class="form-group">
+        <label for="poule-code">Poule code</label>
+        <input type="text" class="form-control" id="poule-code" formControlName="code" aria-describedby="codeHelp">
+        <small id="codeHelp" class="form-text text-muted">Add here a mask (lowercase max 10 chars)</small>
+      </div>
+      <div class="form-group">
+        <label for="poule-color">Poule color</label>
+        <input type="text" class="form-control" id="poule-color" formControlName="color">
+      </div>
+      <div class="form-group">
+        <label for="poule-matchDuration">Poule matchDuration</label>
+        <input type="number" class="form-control" id="poule-matchDuration" formControlName="matchDuration">
+      </div>
+      <div class="form-group">
+        <label for="poule-tournamentCode">Poule tournamentCode</label>
+        <input type="text" class="form-control" id="poule-tournamentCode" formControlName="tournamentCode">
+      </div>
+      <div class="form-group">
+        <label for="poule-categoryCode">Poule categoryCode</label>
+        <input type="text" class="form-control" id="poule-categoryCode" formControlName="categoryCode">
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary mr-2" (click)="modalRef.hide()">Cancel</button>
+      <button *ngIf="formModus==='CREATE'" type="submit" class="btn btn-outline-primary" [disabled]="pouleForm.invalid">Create poule</button>
+      <button *ngIf="formModus==='UPDATE'" type="submit" class="btn btn-outline-primary" [disabled]="pouleForm.invalid">Update poule</button>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #confirmModal>
+  <div class="modal-body text-center">
+    <p>Delete this poule?</p>
+    <button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="decline()" >Cancel</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="confirm()" >Delete</button>
+  </div>
+</ng-template>

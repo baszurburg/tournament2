@@ -1,9 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { TournamentsState } from '../../../../shared/state/tournament.state';
 import { Observable, Subscription } from 'rxjs';
 import { Tournament } from '../../../models/tournament.interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as tournamentActions from '../../../../shared/state/tournament.actions';
+import { Category } from '../../../models/category.interface';
+import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'tnm-tournament-detail',
@@ -12,16 +15,48 @@ import { Router } from '@angular/router';
 })
 export class TournamentDetailComponent implements OnDestroy {
 
-  @Select(TournamentsState.getSelectedTournament) private selectedTournament: Observable<Tournament>;
+  // @Select(TournamentsState.getSelectedTournament) private selectedTournament: Observable<Tournament>;
 
   public tournament: Tournament;
+  private tournaments: Array<Tournament>;
+  private selectedTournamentCode: string;
   private stateSubscriptions: Array<Subscription> = [];
 
-  public constructor(private router: Router) {
-    const stateEditSubscription = this.selectedTournament.subscribe( (value) => this.tournament = value);
-    if (!this.tournament) {
-      this.router.navigate(['/tournaments']);
-    }
+  public constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private dataService: DataService,
+    private store: Store) {
+
+    this.stateSubscriptions.push(this.route.params.subscribe((params) => {
+      this.selectedTournamentCode = params['tournamentCode'];
+      this.store.dispatch(new tournamentActions.StartLoading());
+
+      this.stateSubscriptions.push(this.dataService.getTournament(this.selectedTournamentCode).subscribe((data) => {
+        this.tournaments = data.map((e) => {
+          return {
+            id: e.payload.doc.id,
+            ...e.payload.doc.data()
+          } as Tournament;
+        });
+
+        this.tournament = this.tournaments[0] || null;
+        this.store.dispatch(new tournamentActions.StopLoading());
+        if (!this.tournament) {
+          this.router.navigate(['/tournaments']);
+        } else {
+          this.store.dispatch(new tournamentActions.SelectTournament(this.tournament));
+        }
+      }, (_error) => {
+        console.warn(_error);
+        this.store.dispatch(new tournamentActions.StopLoading());
+        if (!this.tournament) {
+          this.router.navigate(['/tournaments']);
+        }
+      }));
+
+    }));
+
   }
 
   public ngOnDestroy(): void {

@@ -3,15 +3,19 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import * as tournamentActions from './tournament.actions';
 import { Tournament } from '../../app/models/tournament.interface';
 import { Category } from '../../app/models/category.interface';
+import { Poule } from '../../app/models/poule.interface';
 
 // -----tournament state model --------
 export interface TournamentsStateModel {
   tournaments: Array<Tournament>;
   categories: Array<Category>;
+  poules: Array<Poule>;
+  tournamentPoules: Array<Poule>;
   editing: boolean;
   loading: number;
-  selectedTournamentCode: string;
+  selectedTournament: Tournament;
   selectedCategory: Category;
+  selectedPoule: Poule;
 }
 // --- tournament state : initialState---
 @State<TournamentsStateModel>({
@@ -19,10 +23,13 @@ export interface TournamentsStateModel {
   defaults: {
     tournaments: [],
     categories: [],
+    poules: [],
+    tournamentPoules: [],
     editing: false,
     loading: 0,
-    selectedTournamentCode: null,
-    selectedCategory: null
+    selectedTournament: null,
+    selectedCategory: null,
+    selectedPoule: null
   }
 })
 
@@ -51,9 +58,7 @@ export class TournamentsState {
 
   @Selector()
   public static getSelectedTournament(state: TournamentsStateModel): Tournament {
-    return state.tournaments.find(
-      (tournament: Tournament) => tournament.code === state.selectedTournamentCode
-    );
+    return state.selectedTournament;
   }
 
   // CATEGORY Selectors
@@ -67,6 +72,19 @@ export class TournamentsState {
   @Selector()
   public static getSelectedCategory(state: TournamentsStateModel): Category {
     return state.selectedCategory;
+  }
+
+  // POULE Selectors
+  // ==================================================
+
+  @Selector()
+  public static getPoules(state: TournamentsStateModel): Array<Poule> {
+    return state.poules;
+  }
+
+  @Selector()
+  public static getSelectedPoule(state: TournamentsStateModel): Poule {
+    return state.selectedPoule;
   }
 
   // APP LOADING & EDITING Actions
@@ -123,7 +141,7 @@ export class TournamentsState {
     { patchState }: StateContext<TournamentsStateModel>,
     { payload }: tournamentActions.SelectTournament
   ): void {
-    patchState({ selectedTournamentCode: payload });
+    patchState({ selectedTournament: payload });
   }
 
   // CATEGORY Actions
@@ -144,6 +162,36 @@ export class TournamentsState {
     { payload }: tournamentActions.SelectCategory
   ): void {
     patchState({ selectedCategory: payload });
+  }
+
+  // POULE Actions
+  // ==================================================
+
+  // ---- store Tournament / Category Poules ----
+  @Action(tournamentActions.StorePoules)
+  public storePoules(
+    { patchState }: StateContext<TournamentsStateModel>,
+    { payload }: tournamentActions.StorePoules
+  ): void {
+    patchState({ poules: payload });
+  }
+
+  // ---- store all Tournament Poules ----
+  @Action(tournamentActions.StoreTournamentPoules)
+  public storeTournamentPoules(
+    { patchState }: StateContext<TournamentsStateModel>,
+    { payload }: tournamentActions.StoreTournamentPoules
+  ): void {
+    patchState({ tournamentPoules: payload });
+  }
+
+  // ---- selected Poule ----
+  @Action(tournamentActions.SelectPoule)
+  public selectPoule(
+    { patchState }: StateContext<TournamentsStateModel>,
+    { payload }: tournamentActions.SelectPoule
+  ): void {
+    patchState({ selectedPoule: payload });
   }
 
 }

@@ -126,9 +126,9 @@ export class TournamentsComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  public onSelectTournament(tournament: Tournament): void {
-    this.store.dispatch(new tournamentActions.SelectTournament(tournament.code));
-  }
+  // public onSelectTournament(tournament: Tournament): void {
+  //   this.store.dispatch(new tournamentActions.SelectTournament(tournament));
+  // }
 
   public confirm(): void {
     this.deleteTournament(this.tournamentToBeDeleted);

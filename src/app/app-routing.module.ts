@@ -16,8 +16,8 @@ const routes: Routes = [
   { path: 'policies', component: PolicyListComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'tournaments', component: TournamentsComponent },
-  { path: 'tournaments/:code', component: TournamentDetailComponent },
-  { path: 'tournaments/:code/:categoryCode', component: CategoryDetailComponent },
+  { path: 'tournaments/:tournamentCode', component: TournamentDetailComponent },
+  { path: 'tournaments/:tournamentCode/:categoryCode', component: CategoryDetailComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: '**', component: PageNotFoundComponent }
 ];

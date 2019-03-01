@@ -38,6 +38,8 @@ import { SettingsComponent } from './ui/settings/settings.component';
 import { TournamentDetailComponent } from './ui/tournaments/detail/tournament-detail.component';
 import { CategoriesComponent } from './ui/categories/categories.component';
 import { CategoryDetailComponent } from './ui/categories/detail/category-detail.component';
+import { OrderByPipe } from './pipes/order-by.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { CategoryDetailComponent } from './ui/categories/detail/category-detail.
     SettingsComponent,
     TournamentDetailComponent,
     CategoriesComponent,
-    CategoryDetailComponent
+    CategoryDetailComponent,
+    OrderByPipe,
+    FilterPipe
   ],
   imports: [
     BrowserModule,

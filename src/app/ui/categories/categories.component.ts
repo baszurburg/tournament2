@@ -5,6 +5,7 @@ import { DataService } from '../../services/data.service';
 import { Store } from '@ngxs/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { Poule } from '../../models/poule.interface';
 
 @Component({
   selector: 'tnm-categories',
@@ -16,6 +17,7 @@ export class CategoriesComponent implements OnInit {
   @Input() public tournamentCode: string;
 
   public categories: Array<Category>;
+  public tournamentPoules: Array<Poule>;
 
   public categoryForm: FormGroup;
   public modalRef: BsModalRef;
@@ -35,6 +37,11 @@ export class CategoriesComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.getCategories();
+    this.getTournamentPoules();
+  }
+
+  private getCategories(): void {
     this.store.dispatch(new tournamentActions.StartLoading());
     this.dataService.getCategories(this.tournamentCode).subscribe((data) => {
       this.categories = data.map((e) => {
@@ -51,6 +58,24 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
+  private getTournamentPoules(): void {
+      this.store.dispatch(new tournamentActions.StartLoading());
+      this.dataService.getTournamentPoules(this.tournamentCode).subscribe((data) => {
+        this.tournamentPoules = data.map((e) => {
+          return {
+            id: e.payload.doc.id,
+            ...e.payload.doc.data()
+          } as Poule;
+        });
+        this.store.dispatch(new tournamentActions.StoreTournamentPoules(this.tournamentPoules));
+        this.store.dispatch(new tournamentActions.StopLoading());
+      }, (_error) => {
+        console.warn(_error);
+        this.store.dispatch(new tournamentActions.StopLoading());
+      });
+
+  }
+
   // Reactive Form
 
   private createCategoryForm(): void {
@@ -60,7 +85,8 @@ export class CategoriesComponent implements OnInit {
       name: ['', Validators.required],
       description: '',
       startDate: ['', Validators.required],
-      sortOrder: ['0', Validators.required]
+      sortOrder: ['0', Validators.required],
+      tournamentCode: [{value: '', disabled: true}, Validators.required]
     });
   }
   public openCreateCategoryModal(categoryModal: TemplateRef<any>): void {
@@ -73,6 +99,7 @@ export class CategoriesComponent implements OnInit {
     this.categoryForm.controls['startDate'].setValue('');
     this.categoryForm.controls['sortOrder'].setValue('0');
     this.categoryForm.controls['description'].setValue('');
+    this.categoryForm.controls['tournamentCode'].setValue(this.tournamentCode);
 
     this.modalRef = this.modalService.show(categoryModal);
   }
@@ -89,12 +116,13 @@ export class CategoriesComponent implements OnInit {
     }
     this.categoryForm.controls['sortOrder'].setValue(category.sortOrder || '0');
     this.categoryForm.controls['description'].setValue(category.description);
+    this.categoryForm.controls['tournamentCode'].setValue(this.tournamentCode);
 
     this.modalRef = this.modalService.show(categoryModal);
   }
 
-  public openConfirm(confirmModal: TemplateRef<any>, id: string): void {
-    this.categoryIdToBeDeleted = id;
+  public openConfirm(confirmModal: TemplateRef<any>, category: Category): void {
+    this.categoryIdToBeDeleted = category.id;
     this.modalRef = this.modalService.show(confirmModal, {class: 'modal-sm'});
   }
 
@@ -139,8 +167,8 @@ export class CategoriesComponent implements OnInit {
     this.dataService.deleteCategory(id);
   }
 
-  public deleteAllCategories(): void {
-    this.dataService.deleteAllCategories(this.tournamentCode);
-  }
+  // public deleteAllCategories(): void {
+  //   this.dataService.deleteAllCategories(this.tournamentCode);
+  // }
 
 }

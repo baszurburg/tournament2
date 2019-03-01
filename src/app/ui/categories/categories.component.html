@@ -3,18 +3,25 @@
   <button class="btn btn-sm btn-outline-primary" (click)="openCreateCategoryModal(categoryModal)">Create new category</button>
 </div>
 
-<div class="page-panel" *ngFor="let category of categories">
+<div class="page-panel" *ngFor="let category of categories | orderBy: 'sortOrder'">
   <div class="d-flex justify-content-between">
-    <h4>{{ category.name}}</h4>
+    <h4><a routerLink="{{ category.code }}">{{ category.name}}</a></h4>
     <div *ngIf="category.startDate">{{ category.startDate['seconds'] * 1000 | date:'dd MMMM yyyy' }}</div>
   </div>
   <p>{{ category.description}}</p>
 
+
+  <div class="d-flex mb-4">
+    <div *ngFor="let poule of tournamentPoules | filterBy: {categoryCode: category.code }">
+      <div class="badge p-2 mr-4" [ngStyle]="{'background-color': poule.color}">{{ poule.name }}</div>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-between">
-    <a routerLink="{{ category.code }}" (click)="onSelectcategory(category)">Add and edit poules</a>
+    <a routerLink="{{ category.code }}">Add and edit poules</a>
     <div>
-      <button class="btn btn-sm btn-outline-success mr-2" (click)="openUpdateCategoryModal(categoryModal, category)">Edit Category</button>
-      <button class="btn btn-sm btn-outline-danger" (click)="openConfirm(confirmModal, category.id)">Delete category</button>
+      <button class="btn btn-sm btn-outline-success mr-2" (click)="openUpdateCategoryModal(categoryModal, category)">Edit Category details</button>
+      <button class="btn btn-sm btn-outline-danger" (click)="openConfirm(confirmModal, category)">Delete category</button>
     </div>
   </div>
 
@@ -62,6 +69,10 @@
         <label for="category-sort-order">Sort order</label>
         <input type="text" class="form-control" id="category-sort-order" formControlName="sortOrder" aria-describedby="codeHelpOrder">
         <small id="codeHelpOrder" class="form-text text-muted">Lower numbers are displayed first</small>
+      </div>
+      <div class="form-group">
+        <label for="category-tournament-code">Tournament code</label>
+        <input type="text" class="form-control" id="category-tournament-code" formControlName="tournamentCode">
       </div>
 
       <button type="button" class="btn btn-outline-secondary mr-2" (click)="modalRef.hide()">Cancel</button>

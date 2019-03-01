@@ -14,7 +14,7 @@
     <tbody>
     <tr *ngFor="let tournament of tournaments">
 
-      <td><a routerLink="/tournaments/{{tournament.code}}" (click)="onSelectTournament(tournament)">{{ tournament.name }}</a></td>
+      <td><a routerLink="/tournaments/{{tournament.code}}">{{ tournament.name }}</a></td>
       <td><span *ngIf="tournament.dateStart">{{ tournament.dateStart['seconds'] * 1000 | date:'dd-MM-yyyy' }}</span></td>
       <td><span *ngIf="tournament.dateEnd">{{ tournament.dateEnd['seconds'] * 1000 | date:'dd-MM-yyyy' }}</span></td>
       <td>{{ tournament.code }}</td>

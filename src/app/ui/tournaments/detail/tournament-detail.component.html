@@ -1,19 +1,22 @@
 <div class="tournament-detail-page">
 
-  <div class="page-panel">
+  <div *ngIf="tournament">
+    <div class="page-panel">
 
-    <h2>{{tournament.name}}</h2>
+      <h2>{{tournament.name}}</h2>
 
-    <div class="d-flex">
-      <div *ngIf="tournament && tournament.dateStart">{{ tournament.dateStart['seconds'] * 1000 | date:'dd MMMM yyyy' }} </div>
-      <div> &nbsp;- </div>
-      <div *ngIf="tournament && tournament.dateEnd">{{ tournament.dateEnd['seconds'] * 1000 | date:'dd MMMM yyyy' }}</div>
+      <div class="d-flex">
+        <div *ngIf="tournament && tournament.dateStart">{{ tournament.dateStart['seconds'] * 1000 | date:'dd MMMM yyyy' }} </div>
+        <div> &nbsp;- </div>
+        <div *ngIf="tournament && tournament.dateEnd">{{ tournament.dateEnd['seconds'] * 1000 | date:'dd MMMM yyyy' }}</div>
+      </div>
+
+      <p class="lead" *ngIf="tournament?.description">{{tournament.description}}</p>
+
     </div>
 
-    <p class="lead" *ngIf="tournament?.description">{{tournament.description}}</p>
+    <tnm-categories [tournamentCode]="tournament?.code"></tnm-categories>
 
   </div>
-
-  <tnm-categories [tournamentCode]="tournament?.code"></tnm-categories>
 
 </div>
