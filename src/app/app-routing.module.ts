@@ -9,6 +9,7 @@ import { TournamentsComponent } from './ui/tournaments/tournaments.component';
 import { SettingsComponent } from './ui/settings/settings.component';
 import { TournamentDetailComponent } from './ui/tournaments/detail/tournament-detail.component';
 import { CategoryDetailComponent } from './ui/categories/detail/category-detail.component';
+import { TeamsComponent } from './ui/teams/teams.component';
 
 const routes: Routes = [
   { path: 'account', component: AccountComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'tournaments', component: TournamentsComponent },
   { path: 'tournaments/:tournamentCode', component: TournamentDetailComponent },
   { path: 'tournaments/:tournamentCode/:categoryCode', component: CategoryDetailComponent },
+  { path: 'teams', component: TeamsComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: '**', component: PageNotFoundComponent }
 ];

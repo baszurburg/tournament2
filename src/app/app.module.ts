@@ -40,6 +40,8 @@ import { CategoriesComponent } from './ui/categories/categories.component';
 import { CategoryDetailComponent } from './ui/categories/detail/category-detail.component';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
+import { TeamsComponent } from './ui/teams/teams.component';
+import { BreadcrumbModule } from './ui/shared/breadcrumb/breadcrumb.module';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     CategoriesComponent,
     CategoryDetailComponent,
     OrderByPipe,
-    FilterPipe
+    FilterPipe,
+    TeamsComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +74,8 @@ import { FilterPipe } from './pipes/filter.pipe';
     AngularFirestoreModule,
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BreadcrumbModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

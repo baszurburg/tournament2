@@ -1,11 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { TournamentsState } from '../../../../shared/state/tournament.state';
-import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
 import { Tournament } from '../../../models/tournament.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as tournamentActions from '../../../../shared/state/tournament.actions';
-import { Category } from '../../../models/category.interface';
 import { DataService } from '../../../services/data.service';
 
 @Component({
@@ -14,8 +12,6 @@ import { DataService } from '../../../services/data.service';
   styleUrls: ['./tournament-detail.component.scss']
 })
 export class TournamentDetailComponent implements OnDestroy {
-
-  // @Select(TournamentsState.getSelectedTournament) private selectedTournament: Observable<Tournament>;
 
   public tournament: Tournament;
   private tournaments: Array<Tournament>;

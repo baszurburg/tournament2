@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { TournamentsState } from '../../../../shared/state/tournament.state';
-import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { Category } from '../../../models/category.interface';
 import { Tournament } from '../../../models/tournament.interface';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +8,7 @@ import * as tournamentActions from '../../../../shared/state/tournament.actions'
 import { Poule } from '../../../models/poule.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'tnm-category-detail',
@@ -17,9 +16,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
   styleUrls: ['./category-detail.component.scss']
 })
 export class CategoryDetailComponent implements OnInit, OnDestroy {
-
-  @Select(TournamentsState.getSelectedCategory) private selectedCategory: Observable<Category>;
-  @Select(TournamentsState.getSelectedTournament) private selectedTournament: Observable<Tournament>;
 
   public tournament: Tournament;
   public category: Category;
@@ -212,6 +208,8 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
   // Category CRUD
 
   public createPoule(poule: Poule): void {
+    poule.categoryCode = this.selectedCategoryCode;
+    poule.tournamentCode = this.selectedTournamentCode;
     this.dataService.createPoule(poule).then(() => {
       console.log('Poule created');
     }).catch((error) => {

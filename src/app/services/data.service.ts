@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Category } from '../models/category.interface';
 import { Tournament } from '../models/tournament.interface';
 import { Poule } from '../models/poule.interface';
+import * as tournamentActions from '../../shared/state/tournament.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +68,9 @@ export class DataService {
     this.firestore.doc(`categories/${category.id}`).update(category);
   }
 
-  public deleteCategory(categoryId: string, tournamentCode?: string): void {
+  public deleteCategory(category: Category, tournamentCode?: string): void {
+    const categoryId = category.id;
+    this.deleteAllPoules(tournamentCode, category.code);
     this.firestore.doc(`categories/${categoryId}`).delete().then(() => {
       console.log('Category deleted with id: ', categoryId);
     }).catch((error) => {
@@ -75,13 +78,24 @@ export class DataService {
     });
   }
   public deleteAllCategories(tournamentCode: string): void {
-    this.firestore.collection('categories', (category) => category
-      .where('tournamentCode', '==', tournamentCode))
-      .get().subscribe((data) => {
-        data.forEach((doc: QueryDocumentSnapshot<any>) => {
-          this.deleteCategory(doc.id, tournamentCode);
-        });
+    this.getCategories(tournamentCode).subscribe((data) => {
+      let categories = data.map((e) => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data()
+        } as Category;
       });
+      categories.forEach((cat: Category) => {
+        this.deleteCategory(cat, tournamentCode);
+      });
+    });
+    // this.firestore.collection('categories', (category) => category
+    //   .where('tournamentCode', '==', tournamentCode))
+    //   .get().subscribe((data) => {
+    //     data.forEach((doc: QueryDocumentSnapshot<any>) => {
+    //       this.deleteCategory(doc.id, tournamentCode);
+    //     });
+    //   });
   }
 
 // POULES

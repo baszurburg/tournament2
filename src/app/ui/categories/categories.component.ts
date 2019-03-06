@@ -26,6 +26,7 @@ export class CategoriesComponent implements OnInit {
   public formModus: 'CREATE' | 'UPDATE';
 
   private categoryIdToBeDeleted: string;
+  private categoryToBeDeleted: Category;
 
   public constructor(
     private dataService: DataService,
@@ -122,6 +123,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   public openConfirm(confirmModal: TemplateRef<any>, category: Category): void {
+    this.categoryToBeDeleted = category;
     this.categoryIdToBeDeleted = category.id;
     this.modalRef = this.modalService.show(confirmModal, {class: 'modal-sm'});
   }
@@ -141,7 +143,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   public confirm(): void {
-    this.deleteCategory(this.categoryIdToBeDeleted);
+    this.deleteCategory(this.categoryToBeDeleted);
     this.modalRef.hide();
   }
 
@@ -163,8 +165,8 @@ export class CategoriesComponent implements OnInit {
     this.dataService.updateCategory(category);
   }
 
-  public deleteCategory(id: string): void {
-    this.dataService.deleteCategory(id);
+  public deleteCategory(category: Category): void {
+    this.dataService.deleteCategory(category, this.tournamentCode);
   }
 
   // public deleteAllCategories(): void {
